@@ -12,7 +12,6 @@ const app = express();
 
 // ---------------- MIDDLEWARE ----------------
 app.use(express.json());
-app.use(cors()); // allow cross-origin requests (if frontend hosted elsewhere)
 
 // ---------------- STATIC FILES ----------------
 const __filename = fileURLToPath(import.meta.url);

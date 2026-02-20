@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import studentRoutes from './routes/studentRoute.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cors from 'cors'; // optional if frontend is separate
 
 // ---------------- CONFIG ----------------
 dotenv.config();

@@ -1,3 +1,5 @@
+const RENDER_URL = 'https://std-mgt-o4m9.onrender.com';
+
 const form = document.getElementById('studentForm');
 const tableBody = document.getElementById('studentTableBody');
 const errorMessage = document.getElementById('errorMessage');
@@ -8,7 +10,7 @@ let editId = null;
 // ---------------- FETCH STUDENTS ----------------
 const fetchStudents = async () => {
     try {
-        const res = await fetch('/api/students');
+        const res = await fetch(`${RENDER_URL}/students`);
         const data = await res.json();
 
         tableBody.innerHTML = '';
@@ -42,7 +44,7 @@ const deleteStudent = async (id) => {
     if (!confirmDelete) return;
 
     try {
-        const res = await fetch(`/api/students/${id}`, {
+        const res = await fetch(`${RENDER_URL}/students/${id}`, {
             method: 'DELETE'
         });
 
@@ -60,7 +62,7 @@ const deleteStudent = async (id) => {
 // ---------------- LOAD STUDENT INTO FORM (EDIT MODE) ----------------
 const editStudent = async (id) => {
     try {
-        const res = await fetch(`/api/students/${id}`);
+        const res = await fetch(`${RENDER_URL}/students/${id}`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -102,7 +104,7 @@ form.addEventListener('submit', async (e) => {
 
         if (editMode) {
             // UPDATE
-            res = await fetch(`/api/students/${editId}`, {
+            res = await fetch(`${RENDER_URL}/students/${editId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,7 +117,7 @@ form.addEventListener('submit', async (e) => {
 
         } else {
             // CREATE
-            res = await fetch('/api/students', {
+            res = await fetch(`${RENDER_URL}/students`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

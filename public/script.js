@@ -2,6 +2,9 @@ const form = document.getElementById('studentForm');
 const tableBody = document.getElementById('studentTableBody');
 const errorMessage = document.getElementById('errorMessage');
 
+let editMode = false;
+let editId = null;
+
 // ---------------- FETCH STUDENTS ----------------
 const fetchStudents = async () => {
     try {
@@ -19,6 +22,10 @@ const fetchStudents = async () => {
                 <td>${student.course}</td>
                 <td>${student.gpa}</td>
                 <td>${student.enrolled ? 'Yes' : 'No'}</td>
+                <td>
+                    <button onclick="editStudent('${student._id}')">Edit</button>
+                    <button onclick="deleteStudent('${student._id}')">Delete</button>
+                </td>
             `;
 
             tableBody.appendChild(row);
@@ -29,7 +36,54 @@ const fetchStudents = async () => {
     }
 };
 
-// ---------------- CREATE STUDENT ----------------
+// ---------------- DELETE STUDENT ----------------
+const deleteStudent = async (id) => {
+    const confirmDelete = confirm('Are you sure you want to delete this student?');
+    if (!confirmDelete) return;
+
+    try {
+        const res = await fetch(`/api/students/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to delete student');
+        }
+
+        fetchStudents();
+
+    } catch (error) {
+        errorMessage.textContent = error.message;
+    }
+};
+
+// ---------------- LOAD STUDENT INTO FORM (EDIT MODE) ----------------
+const editStudent = async (id) => {
+    try {
+        const res = await fetch(`/api/students/${id}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error('Failed to fetch student data');
+        }
+
+        const student = data.data;
+
+        document.getElementById('name').value = student.name;
+        document.getElementById('age').value = student.age;
+        document.getElementById('course').value = student.course;
+        document.getElementById('gpa').value = student.gpa;
+        document.getElementById('enrolled').checked = student.enrolled;
+
+        editMode = true;
+        editId = id;
+
+    } catch (error) {
+        errorMessage.textContent = error.message;
+    }
+};
+
+// ---------------- CREATE OR UPDATE STUDENT ----------------
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorMessage.textContent = '';
@@ -43,18 +97,37 @@ form.addEventListener('submit', async (e) => {
     };
 
     try {
-        const res = await fetch('/api/students', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(studentData)
-        });
+
+        let res;
+
+        if (editMode) {
+            // UPDATE
+            res = await fetch(`/api/students/${editId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(studentData)
+            });
+
+            editMode = false;
+            editId = null;
+
+        } else {
+            // CREATE
+            res = await fetch('/api/students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(studentData)
+            });
+        }
 
         const result = await res.json();
 
         if (!res.ok) {
-            throw new Error(result.message || 'Failed to create student');
+            throw new Error(result.message || 'Operation failed');
         }
 
         form.reset();
@@ -65,5 +138,5 @@ form.addEventListener('submit', async (e) => {
     }
 });
 
-// Load students on page load
+// ---------------- INITIAL LOAD ----------------
 fetchStudents();

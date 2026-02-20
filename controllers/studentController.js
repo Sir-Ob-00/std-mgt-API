@@ -59,7 +59,7 @@ export const getStudentById = async (req, res) => {
 export const updateStudent = async (req, res) => {
     try {
             const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,       // return the updated document
+            returnDocument: 'after',  // replaces new: true
             runValidators: true // enforce schema validations
         });
 

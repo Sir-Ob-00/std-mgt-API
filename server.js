@@ -22,8 +22,13 @@ const __dirname = path.dirname(__filename);
 // Serve frontend from "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ---------------- ROUTES ----------------
+// CSP middleware
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'");
+    next();
+});
 
+// ---------------- ROUTES ----------------
 app.use('/api/students', studentRoutes);
 
 // ---------------- DATABASE + SERVER ----------------

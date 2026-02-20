@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Student Management</h1>
+
+        <!-- -------- CREATE STUDENT FORM -------- -->
+        <form id="studentForm">
+            <input type="text" id="name" placeholder="Name" required />
+            <input type="number" id="age" placeholder="Age" required />
+            <input type="text" id="course" placeholder="Course" required />
+            <input type="number" id="gpa" placeholder="GPA" step="0.1" required />
+            
+            <label class="checkbox">
+                <input type="checkbox" id="enrolled" />
+                Enrolled
+            </label>
+
+            <button type="submit">Add Student</button>
+        </form>
+
+        <p id="errorMessage" class="error"></p>
+
+        <!-- -------- STUDENTS TABLE -------- -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Course</th>
+                    <th>GPA</th>
+                    <th>Enrolled</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -31,12 +31,6 @@ app.use((req, res, next) => {
 // ---------------- API ROUTES ----------------
 app.use('/api/students', studentRoutes); // API must come BEFORE catch-all
 
-// ---------------- CATCH-ALL ROUTE ----------------
-// Serve frontend for any other request (for SPA routing)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 // ---------------- DATABASE + SERVER ----------------
 const PORT = process.env.PORT || 5000;
 const MONGOURL = process.env.MONGO_URL || "mongodb://localhost:27017/school";

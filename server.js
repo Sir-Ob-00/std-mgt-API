@@ -33,7 +33,7 @@ app.use('/api/students', studentRoutes); // API must come BEFORE catch-all
 
 // ---------------- CATCH-ALL ROUTE ----------------
 // Serve frontend for any other request (for SPA routing)
-app.get('/.*/', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

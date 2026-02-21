@@ -1,4 +1,6 @@
-const RENDER_URL = 'https://std-mgt-o4m9.onrender.com';
+// ---------------- CONFIG ----------------
+// Use relative paths for local testing
+const API_URL = '/api/students';
 
 const form = document.getElementById('studentForm');
 const tableBody = document.getElementById('studentTableBody');
@@ -10,7 +12,7 @@ let editId = null;
 // ---------------- FETCH STUDENTS ----------------
 const fetchStudents = async () => {
     try {
-        const res = await fetch(`${RENDER_URL}/api/students`);
+        const res = await fetch(API_URL);
         const data = await res.json();
 
         tableBody.innerHTML = '';
@@ -35,6 +37,7 @@ const fetchStudents = async () => {
 
     } catch (error) {
         errorMessage.textContent = 'Failed to fetch students.';
+        console.error(error);
     }
 };
 
@@ -44,30 +47,27 @@ const deleteStudent = async (id) => {
     if (!confirmDelete) return;
 
     try {
-        const res = await fetch(`${RENDER_URL}/api/students/${id}`, {
+        const res = await fetch(`${API_URL}/${id}`, {
             method: 'DELETE'
         });
 
-        if (!res.ok) {
-            throw new Error('Failed to delete student');
-        }
+        if (!res.ok) throw new Error('Failed to delete student');
 
         fetchStudents();
 
     } catch (error) {
         errorMessage.textContent = error.message;
+        console.error(error);
     }
 };
 
 // ---------------- LOAD STUDENT INTO FORM (EDIT MODE) ----------------
 const editStudent = async (id) => {
     try {
-        const res = await fetch(`${RENDER_URL}/api/students/${id}`);
+        const res = await fetch(`${API_URL}/${id}`);
         const data = await res.json();
 
-        if (!res.ok) {
-            throw new Error('Failed to fetch student data');
-        }
+        if (!res.ok) throw new Error('Failed to fetch student data');
 
         const student = data.data;
 
@@ -82,6 +82,7 @@ const editStudent = async (id) => {
 
     } catch (error) {
         errorMessage.textContent = error.message;
+        console.error(error);
     }
 };
 
@@ -99,16 +100,13 @@ form.addEventListener('submit', async (e) => {
     };
 
     try {
-
         let res;
 
         if (editMode) {
             // UPDATE
-            res = await fetch(`${RENDER_URL}/api/students/${editId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+            res = await fetch(`${API_URL}/${editId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(studentData)
             });
 
@@ -117,26 +115,23 @@ form.addEventListener('submit', async (e) => {
 
         } else {
             // CREATE
-            res = await fetch(`${RENDER_URL}/api/students`, {
+            res = await fetch(API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(studentData)
             });
         }
 
         const result = await res.json();
 
-        if (!res.ok) {
-            throw new Error(result.message || 'Operation failed');
-        }
+        if (!res.ok) throw new Error(result.message || 'Operation failed');
 
         form.reset();
         fetchStudents();
 
     } catch (error) {
         errorMessage.textContent = error.message;
+        console.error(error);
     }
 });
 

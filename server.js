@@ -19,25 +19,23 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Content Security Policy
-app.use((req, res, next) => {
-    res.setHeader(
-        "Content-Security-Policy",
-        "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'"
-    );
-    next();
+// ---------------- API ROUTES ----------------
+app.use('/api/students', studentRoutes);
+
+// ---------------- CATCH-ALL ROUTE ----------------
+// Serve frontend for any non-API route (SPA)
+app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ---------------- API ROUTES ----------------
-app.use('/api/students', studentRoutes); // API must come BEFORE catch-all
-
 // ---------------- DATABASE + SERVER ----------------
-const PORT = process.env.PORT || 5000;
-const MONGOURL = process.env.MONGO_URL || "mongodb://localhost:27017/school";
+const PORT = process.env.PORT || 4000;
+const MONGOURL = process.env.MONGO_URL || 'mongodb://localhost:27017/school';
 
 const startServer = async () => {
     try {
         await connectDB(MONGOURL);
+        console.log('Database connected successfully');
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     } catch (error) {
         console.error('Failed to start server:', error);

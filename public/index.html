@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management</title>
     <link rel="stylesheet" href="index.css">
 </head>
@@ -28,19 +29,21 @@
         <p id="errorMessage" class="error"></p>
 
         <!-- -------- STUDENTS TABLE -------- -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Course</th>
-                    <th>GPA</th>
-                    <th>Enrolled</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="studentTableBody"></tbody>
-        </table>
+        <div class="table-wrapper">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Course</th>
+                        <th>GPA</th>
+                        <th>Enrolled</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
     <script src="script.js"></script>
